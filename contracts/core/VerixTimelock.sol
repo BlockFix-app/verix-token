@@ -85,6 +85,7 @@ contract VerixTimelock is TimelockController, AccessControl, Pausable {
         bytes32 predecessor,
         bytes32 salt
     ) public virtual override onlyRole(PROPOSAL_ROLE) whenNotPaused {
+        require(target != address(0), "Invalid target address");
         bytes32 id = hashOperation(target, value, data, predecessor, salt);
         uint256 executionTime = block.timestamp + getMinDelay();
 
