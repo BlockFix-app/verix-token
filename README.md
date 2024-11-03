@@ -1,6 +1,6 @@
 # Verix (VEX) Token
 
-![Verix Logo](5%20(6).png)
+![Verix Logo](verix-logo.png)
 
 ## Overview
 Verix (VEX) is an innovative token developed to support the ecosystem of decentralized platforms with high efficiency, security, and transparency. VEX leverages blockchain technology to facilitate seamless transactions, promote liquidity, and empower users with smart financial solutions.
