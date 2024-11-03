@@ -148,9 +148,10 @@ info.lastClaimedCycle = cycleId;
         // Update user info
         info.totalClaimed = info.totalClaimed.add(unclaimedAmount);
         info.lastShareBalance = verixToken.balanceOf(user);
-        
-        // Transfer dividends
+        // Check contract balance and transfer dividends
+        require(address(this).balance >= unclaimedAmount, "Insufficient contract balance");
         (bool success, ) = user.call{value: unclaimedAmount}("");
+        require(success, "Transfer failed");
         require(success, "Transfer failed");
         
         // Trim claimed cycles array to actual size
