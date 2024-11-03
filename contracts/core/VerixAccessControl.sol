@@ -75,22 +75,23 @@ contract VerixAccessControl is AccessControl, Pausable, ReentrancyGuard {
      * @notice Initiates a role transfer request
      * @param role Role to transfer
      * @param newAdmin Address of the new admin
-     */
-    function initiateRoleTransfer(bytes32 role, address newAdmin) 
-        external 
-        onlyRole(getRoleAdmin(role)) 
-    {
-        require(newAdmin != address(0), "Invalid new admin address");
-        require(!roleTransfers[role].pending, "Transfer already pending");
+     function initiateRoleTransfer(bytes32 role, address newAdmin) 
+         external 
+         onlyRole(getRoleAdmin(role)) 
+     {
+         require(role != DEFAULT_ADMIN_ROLE, "Cannot transfer DEFAULT_ADMIN_ROLE");
+         require(newAdmin != address(0), "Invalid new admin address");
+         require(!roleTransfers[role].pending, "Transfer already pending");
 
-        uint256 effectiveTime = block.timestamp + ROLE_TRANSFER_DELAY;
-        roleTransfers[role] = RoleTransfer({
-            newAdmin: newAdmin,
-            effectiveTime: effectiveTime,
-            pending: true
-        });
+         uint256 effectiveTime = block.timestamp + ROLE_TRANSFER_DELAY;
+         roleTransfers[role] = RoleTransfer({
+             newAdmin: newAdmin,
+             effectiveTime: effectiveTime,
+             pending: true
+         });
 
-        emit RoleTransferRequested(role, msg.sender, newAdmin, effectiveTime);
+         emit RoleTransferRequested(role, msg.sender, newAdmin, effectiveTime);
+     }
     }
 
     /**
