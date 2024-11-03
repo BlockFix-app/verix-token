@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> AssetRegistration
+    
+    AssetRegistration --> ContractDeployment
+    ContractDeployment --> Active
+    
+    Active --> MaintenanceRequired
+    MaintenanceRequired --> WorkOrderCreated
+    WorkOrderCreated --> ServiceInProgress
+    ServiceInProgress --> ServiceVerification
+    
+    ServiceVerification --> Active: Verified
+    ServiceVerification --> DisputeResolution: Disputed
+    DisputeResolution --> ServiceInProgress: Rework Required
+    DisputeResolution --> Active: Resolved
+    
+    Active --> WarrantyExpired
+    WarrantyExpired --> [*]
+    
+    note right of Active: Regular Status Updates
+    note right of ServiceVerification: Digital Signatures Required
+    note left of MaintenanceRequired: Automated Alerts

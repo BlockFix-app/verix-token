@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant User
+    participant Token as Verix Token
+    participant Pool as Gas Pool
+    participant Relayer
+    participant Network as Polygon Network
+    
+    User->>Token: Check Tier Status
+    Token->>User: Confirm Coverage Level
+    
+    User->>Pool: Request Gas Coverage
+    Pool->>Token: Verify Holdings
+    Token->>Pool: Confirm Eligibility
+    
+    Pool->>Relayer: Authorize Coverage
+    Relayer->>Network: Submit Transaction
+    Network->>Relayer: Confirm Transaction
+    Relayer->>Pool: Report Gas Usage
+    Pool->>User: Update Usage Stats
