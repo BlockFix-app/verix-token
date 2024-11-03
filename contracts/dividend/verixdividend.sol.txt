@@ -1,0 +1,164 @@
+info.lastClaimedCycle = cycleId;
+        }
+        
+        require(unclaimedAmount > 0, "No dividends to claim");
+        
+        // Update user info
+        info.totalClaimed = info.totalClaimed.add(unclaimedAmount);
+        info.lastShareBalance = verixToken.balanceOf(user);
+        
+        // Transfer dividends
+        (bool success, ) = user.call{value: unclaimedAmount}("");
+        require(success, "Transfer failed");
+        
+        // Trim claimed cycles array to actual size
+        uint256[] memory finalClaimedCycles = new uint256[](claimedCount);
+        for (uint256 i = 0; i < claimedCount; i++) {
+            finalClaimedCycles[i] = claimedCycles[i];
+        }
+        
+        emit DividendClaimed(user, unclaimedAmount, finalClaimedCycles);
+    }
+    
+    /**
+     * @notice Gets unclaimed dividends for a user
+     * @param user Address of the user
+     * @return unclaimedAmount Total unclaimed dividends
+     * @return cycles Array of unclaimed cycle IDs
+     */
+    function getUnclaimedDividends(address user)
+        external
+        view
+        returns (uint256 unclaimedAmount, uint256[] memory cycles)
+    {
+        UserInfo storage info = userInfo[user];
+        uint256 startCycle = info.lastClaimedCycle.add(1);
+        uint256 cycleCount = 0;
+        
+        // First pass: count valid cycles
+        for (uint256 cycleId = startCycle; cycleId < currentCycleId; cycleId++) {
+            DividendCycle storage cycle = dividendCycles[cycleId];
+            if (!cycle.finalized) break;
+            
+            uint256 shareBalance = verixToken.balanceOf(user);
+            uint256 cycleDividends = shareBalance.mul(cycle.dividendPerShare).div(1e18);
+            
+            if (cycleDividends > 0) {
+                unclaimedAmount = unclaimedAmount.add(cycleDividends);
+                cycleCount++;
+            }
+        }
+        
+        // Second pass: populate cycles array
+        cycles = new uint256[](cycleCount);
+        uint256 index = 0;
+        for (uint256 cycleId = startCycle; cycleId < currentCycleId; cycleId++) {
+            DividendCycle storage cycle = dividendCycles[cycleId];
+            if (!cycle.finalized) break;
+            
+            uint256 shareBalance = verixToken.balanceOf(user);
+            uint256 cycleDividends = shareBalance.mul(cycle.dividendPerShare).div(1e18);
+            
+            if (cycleDividends > 0) {
+                cycles[index] = cycleId;
+                index++;
+            }
+        }
+    }
+    
+    /**
+     * @notice Gets dividend cycle information
+     * @param cycleId ID of the cycle
+     * @return totalDividends Total dividends distributed in the cycle
+     * @return totalShares Total shares at time of distribution
+     * @return dividendPerShare Dividend amount per share
+     * @return timestamp Timestamp of the cycle
+     * @return finalized Whether the cycle is finalized
+     */
+    function getDividendCycle(uint256 cycleId)
+        external
+        view
+        returns (
+            uint256 totalDividends,
+            uint256 totalShares,
+            uint256 dividendPerShare,
+            uint256 timestamp,
+            bool finalized
+        )
+    {
+        DividendCycle storage cycle = dividendCycles[cycleId];
+        return (
+            cycle.totalDividends,
+            cycle.totalShares,
+            cycle.dividendPerShare,
+            cycle.timestamp,
+            cycle.finalized
+        );
+    }
+    
+    /**
+     * @notice Gets user dividend information
+     * @param user Address of the user
+     * @return lastClaimedCycle Last claimed cycle
+     * @return totalClaimed Total amount claimed
+     * @return lastShareBalance Last recorded share balance
+     */
+    function getUserInfo(address user)
+        external
+        view
+        returns (
+            uint256 lastClaimedCycle,
+            uint256 totalClaimed,
+            uint256 lastShareBalance
+        )
+    {
+        UserInfo storage info = userInfo[user];
+        return (
+            info.lastClaimedCycle,
+            info.totalClaimed,
+            info.lastShareBalance
+        );
+    }
+    
+    /**
+     * @notice Withdraws unclaimed dividends (only admin)
+     * @param amount Amount to withdraw
+     */
+    function withdrawUnclaimedDividends(uint256 amount)
+        external
+        nonReentrant
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        require(amount <= address(this).balance, "Insufficient balance");
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Transfer failed");
+    }
+    
+    /**
+     * @notice Pauses dividend distributions and claims
+     */
+    function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _pause();
+    }
+    
+    /**
+     * @notice Unpauses dividend distributions and claims
+     */
+    function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _unpause();
+    }
+    
+    /**
+     * @notice Helper function to get minimum of two numbers
+     */
+    function min(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a < b ? a : b;
+    }
+    
+    /**
+     * @notice Required for receiving ETH
+     */
+    receive() external payable {
+        // Accept ETH transfers
+    }
+}
