@@ -261,14 +261,17 @@ info.lastClaimedCycle = cycleId;
             info.lastShareBalance
         );
     }
-    
-    /**
-     * @notice Withdraws unclaimed dividends (only admin)
-     * @param amount Amount to withdraw
-     */
     function withdrawUnclaimedDividends(uint256 amount)
         external
         nonReentrant
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        require(amount <= address(this).balance, "Insufficient balance");
+        uint256 balanceBefore = address(this).balance;
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Transfer failed");
+        require(address(this).balance == balanceBefore - amount, "Reentrancy detected");
+    }
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         require(amount <= address(this).balance, "Insufficient balance");
