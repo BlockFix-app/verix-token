@@ -1,0 +1,41 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Token Distribution Pie Chart -->
+    <g transform="translate(200, 200)">
+        <!-- Public Sale 40% -->
+        <path d="M 0 0 L 144 0 A 144 144 0 0 1 -144 0 Z" fill="#4A90E2" />
+        <!-- Ecosystem 25% -->
+        <path d="M 0 0 L 144 0 A 144 144 0 0 1 72 124.7 Z" fill="#50E3C2" />
+        <!-- Team 15% -->
+        <path d="M 0 0 L 72 124.7 A 144 144 0 0 1 -72 124.7 Z" fill="#F5A623" />
+        <!-- Treasury 10% -->
+        <path d="M 0 0 L -72 124.7 A 144 144 0 0 1 -144 0 Z" fill="#D0021B" />
+        <!-- Community 10% -->
+        <path d="M 0 0 L -144 0 A 144 144 0 0 1 -72 -124.7 Z" fill="#7ED321" />
+        
+        <!-- Labels -->
+        <text x="100" y="0" fill="black" font-size="14">Public Sale (40%)</text>
+        <text x="50" y="100" fill="black" font-size="14">Ecosystem (25%)</text>
+        <text x="0" y="150" fill="black" font-size="14">Team (15%)</text>
+        <text x="-80" y="100" fill="black" font-size="14">Treasury (10%)</text>
+        <text x="-100" y="0" fill="black" font-size="14">Community (10%)</text>
+    </g>
+    
+    <!-- Token Utility Icons -->
+    <g transform="translate(500, 50)">
+        <!-- Gas Coverage Icon -->
+        <circle cx="0" cy="0" r="20" fill="#4A90E2"/>
+        <text x="30" y="5" fill="black" font-size="14">Gas Fee Coverage</text>
+        
+        <!-- Platform Access Icon -->
+        <circle cx="0" cy="50" r="20" fill="#50E3C2"/>
+        <text x="30" y="55" fill="black" font-size="14">Platform Access</text>
+        
+        <!-- Governance Icon -->
+        <circle cx="0" cy="100" r="20" fill="#F5A623"/>
+        <text x="30" y="105" fill="black" font-size="14">Governance Rights</text>
+        
+        <!-- Value Preservation Icon -->
+        <circle cx="0" cy="150" r="20" fill="#D0021B"/>
+        <text x="30" y="155" fill="black" font-size="14">Value Preservation</text>
+    </g>
+</svg>

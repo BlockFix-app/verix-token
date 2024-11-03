@@ -1,0 +1,40 @@
+flowchart TB
+    subgraph Users
+        AssetOwner[Asset Owner]
+        ServiceProvider[Service Provider]
+        TokenHolder[Token Holder]
+    end
+
+    subgraph Verix Platform
+        Token[Verix Token]
+        GasPool[Gas Pool]
+        Governance[Governance]
+    end
+
+    subgraph BlockFix Platform
+        AssetRegistry[Asset Registry]
+        WorkOrders[Work Orders]
+        ServiceRecords[Service Records]
+        WarrantySystem[Warranty System]
+    end
+
+    subgraph Blockchain Layer
+        SmartContracts[Smart Contracts]
+        Oracle[Price Oracle]
+        RelayerNetwork[Relayer Network]
+    end
+
+    AssetOwner --> Token
+    AssetOwner --> AssetRegistry
+    ServiceProvider --> WorkOrders
+    TokenHolder --> Governance
+    
+    Token --> GasPool
+    GasPool --> RelayerNetwork
+    RelayerNetwork --> SmartContracts
+    
+    AssetRegistry --> SmartContracts
+    WorkOrders --> ServiceRecords
+    ServiceRecords --> WarrantySystem
+    
+    Oracle --> GasPool

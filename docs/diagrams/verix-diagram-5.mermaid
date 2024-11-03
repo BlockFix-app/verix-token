@@ -1,0 +1,26 @@
+graph TB
+    subgraph Proposal Creation
+        A[Community Member] -->|Submit Proposal| B[Proposal Queue]
+        B --> C{Threshold Check}
+        C -->|Meets Requirements| D[Active Proposal]
+        C -->|Below Threshold| E[Rejected]
+    end
+    
+    subgraph Voting Process
+        D --> F[Voting Period]
+        F --> G[Vote Counting]
+        G --> H{Decision}
+        H -->|Passed| I[Time Lock]
+        H -->|Failed| J[Archived]
+    end
+    
+    subgraph Implementation
+        I --> K[Execution]
+        K --> L[Implementation]
+        L --> M[Monitoring]
+    end
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#bbf,stroke:#333,stroke-width:2px
+    style I fill:#bfb,stroke:#333,stroke-width:2px
+    style L fill:#fbf,stroke:#333,stroke-width:2px
