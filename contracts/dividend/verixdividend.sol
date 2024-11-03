@@ -1,3 +1,145 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+/**
+ * @title VerixDividend
+ * @notice Manages dividend distribution for Verix token holders
+ * @dev Implements a dividend distribution system with snapshots and claims
+ */
+contract VerixDividend is ReentrancyGuard, Pausable, AccessControl {
+    using SafeMath for uint256;
+
+    bytes32 public constant DIVIDEND_MANAGER_ROLE = keccak256("DIVIDEND_MANAGER_ROLE");
+    
+    IERC20 public immutable verixToken;
+    
+    struct DividendCycle {
+        uint256 totalDividends;
+        uint256 totalShares;
+        uint256 dividendPerShare;
+        uint256 timestamp;
+        bool finalized;
+    }
+    
+    struct UserInfo {
+        uint256 lastClaimedCycle;
+        uint256 unclaimedDividends;
+        uint256 totalClaimed;
+        uint256 lastShareBalance;
+    }
+    
+    // Current dividend cycle
+    uint256 public currentCycleId;
+    // Mapping from cycle ID to dividend information
+    mapping(uint256 => DividendCycle) public dividendCycles;
+    // Mapping from user address to dividend information
+    mapping(address => UserInfo) public userInfo;
+    
+    // Minimum time between dividend distributions
+    uint256 public constant MIN_DISTRIBUTION_INTERVAL = 1 days;
+    // Maximum dividend cycles that can be claimed in one transaction
+    uint256 public constant MAX_CLAIM_CYCLES = 50;
+    
+    // Events
+    event DividendDistributed(uint256 indexed cycleId, uint256 amount);
+    event DividendClaimed(address indexed user, uint256 amount, uint256[] cycles);
+    event CyclePeriodUpdated(uint256 newPeriod);
+    
+    /**
+     * @notice Contract constructor
+     * @param _verixToken Address of the Verix token contract
+     * @param _admin Address that will have admin role
+     */
+    constructor(address _verixToken, address _admin) {
+        require(_verixToken != address(0), "Invalid token address");
+        require(_admin != address(0), "Invalid admin address");
+        
+        verixToken = IERC20(_verixToken);
+        
+        _setupRole(DEFAULT_ADMIN_ROLE, _admin);
+        _setupRole(DIVIDEND_MANAGER_ROLE, _admin);
+        
+        // Initialize first cycle
+        currentCycleId = 1;
+        dividendCycles[currentCycleId].timestamp = block.timestamp;
+    }
+    
+    /**
+     * @notice Distributes dividends for the current cycle
+     * @dev Must send ETH along with the transaction
+     */
+    function distributeDividends() 
+        external 
+        payable 
+        nonReentrant 
+        onlyRole(DIVIDEND_MANAGER_ROLE) 
+        whenNotPaused 
+    {
+        require(msg.value > 0, "No dividends to distribute");
+        require(
+            block.timestamp >= dividendCycles[currentCycleId].timestamp + MIN_DISTRIBUTION_INTERVAL,
+            "Distribution too frequent"
+        );
+        
+        DividendCycle storage cycle = dividendCycles[currentCycleId];
+        require(!cycle.finalized, "Cycle already finalized");
+        
+        // Get total shares (token supply)
+        uint256 totalShares = verixToken.totalSupply();
+        require(totalShares > 0, "No shares exist");
+        
+        // Calculate dividend per share
+        cycle.totalDividends = cycle.totalDividends.add(msg.value);
+        cycle.totalShares = totalShares;
+        cycle.dividendPerShare = cycle.totalDividends.mul(1e18).div(totalShares);
+        cycle.finalized = true;
+        
+        // Start new cycle
+        currentCycleId = currentCycleId.add(1);
+        dividendCycles[currentCycleId].timestamp = block.timestamp;
+        
+        emit DividendDistributed(currentCycleId.sub(1), msg.value);
+    }
+    
+    /**
+     * @notice Claims dividends for a user
+     * @param maxCycles Maximum number of cycles to claim
+     */
+    function claimDividends(uint256 maxCycles) 
+        external 
+        nonReentrant 
+        whenNotPaused 
+    {
+        require(maxCycles > 0 && maxCycles <= MAX_CLAIM_CYCLES, "Invalid cycles");
+        
+        address user = msg.sender;
+        UserInfo storage info = userInfo[user];
+        uint256 unclaimedAmount = 0;
+        uint256[] memory claimedCycles = new uint256[](maxCycles);
+        uint256 claimedCount = 0;
+        
+        // Start from last claimed cycle + 1
+        uint256 startCycle = info.lastClaimedCycle.add(1);
+        uint256 endCycle = min(currentCycleId, startCycle.add(maxCycles));
+        
+        for (uint256 cycleId = startCycle; cycleId < endCycle; cycleId++) {
+            DividendCycle storage cycle = dividendCycles[cycleId];
+            if (!cycle.finalized) break;
+            
+            uint256 shareBalance = verixToken.balanceOf(user);
+            uint256 cycleDividends = shareBalance.mul(cycle.dividendPerShare).div(1e18);
+            
+            if (cycleDividends > 0) {
+                unclaimedAmount = unclaimedAmount.add(cycleDividends);
+                claimedCycles[claimedCount] = cycleId;
+                claimedCount++;
+            }
 info.lastClaimedCycle = cycleId;
         }
         
