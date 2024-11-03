@@ -16,17 +16,17 @@ The following diagrams illustrate the core architecture of the Verix ecosystem, 
 
 ### Workflow Diagram
 ```mermaid
-%% Include Diagram 1
+%% Include verix-diagram-1
 ```
 
 ### Tokenomics and Governance Model
 ```mermaid
-%% Include Diagram 2
+%% Include verix-diagram-2
 ```
 
 ### Interaction with External Services
 ```mermaid
-%% Include Diagram 3
+%% Include verix-diagram-3
 ```
 
 ## Whitepaper
