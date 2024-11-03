@@ -119,8 +119,8 @@ contract VerixDividend is ReentrancyGuard, Pausable, AccessControl {
         require(maxCycles > 0 && maxCycles <= MAX_CLAIM_CYCLES, "Invalid cycles");
         
         address user = msg.sender;
-        UserInfo storage info = userInfo[user];
-        uint256 unclaimedAmount = 0;
+        using EnumerableSet for EnumerableSet.UintSet;
+        EnumerableSet.UintSet private claimedCycles;
         uint256[] memory claimedCycles = new uint256[](maxCycles);
         uint256 claimedCount = 0;
         
