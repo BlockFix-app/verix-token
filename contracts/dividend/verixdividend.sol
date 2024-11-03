@@ -17,6 +17,7 @@ contract VerixDividend is ReentrancyGuard, Pausable, AccessControl {
 
     bytes32 public constant DIVIDEND_MANAGER_ROLE = keccak256("DIVIDEND_MANAGER_ROLE");
     
+    using SafeERC20 for IERC20;
     IERC20 public immutable verixToken;
     
     struct DividendCycle {
