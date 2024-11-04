@@ -1,0 +1,22 @@
+{
+  "name": "verix-token",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   <img src=\"images/verix-logo.png\" alt=\"Verix Logo\" width=\"200\" height=\"200\"/>\r </p>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "hardhat": "^2.22.15"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0"
+  }
+}

@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "../interfaces/IVerixGasOracle.sol";
+import "./interfaces/IVerixGasOracle.sol";
 
 /**
  * @title VerixGasOracle
@@ -75,44 +75,47 @@ contract VerixGasOracle is IVerixGasOracle, AccessControl, Pausable {
             uint256 maticUpdateTime,
             uint80 answeredInRound
         ) = maticUsdPriceFeed.latestRoundData();
-        
+
         require(maticPrice > 0, "Invalid MATIC price");
         require(answeredInRound >= roundId, "Stale MATIC price");
         require(
             block.timestamp - maticUpdateTime <= PRICE_STALENESS_THRESHOLD,
             "MATIC price too old"
         );
-        
+
         maticUsdPrice = uint256(maticPrice);
-        
+
         // Update gas price in Wei
         (
-            roundId,
+            uint80 gasRoundId,
             int256 gasWeiPrice,
             ,
             uint256 gasUpdateTime,
-            answeredInRound
+            uint80 gasAnsweredInRound
         ) = gasWeiPriceFeed.latestRoundData();
-        
+
         require(gasWeiPrice > 0, "Invalid gas price");
-        require(answeredInRound >= roundId, "Stale gas price");
+        require(gasAnsweredInRound >= gasRoundId, "Stale gas price");
         require(
             block.timestamp - gasUpdateTime <= PRICE_STALENESS_THRESHOLD,
             "Gas price too old"
         );
-        
+
         uint256 newGasPrice = uint256(gasWeiPrice);
         require(
             newGasPrice >= minGasPrice && newGasPrice <= maxGasPrice,
             "Gas price out of bounds"
         );
-        
+
         gasPrice = newGasPrice;
         lastUpdateTimestamp = block.timestamp;
-        
+
         emit MaticPriceUpdated(maticUsdPrice, block.timestamp);
         emit GasPriceUpdated(gasPrice, block.timestamp);
     }
+
+
+
     
     /**
      * @notice Calculates gas cost in MATIC for a given gas amount
