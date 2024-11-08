@@ -1,0 +1,179 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "date",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "serviceType",
+						"type": "string"
+					}
+				],
+				"name": "ServiceLogged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					}
+				],
+				"name": "getServiceHistory",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "date",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "serviceType",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "serviceProvider",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "partsReplaced",
+								"type": "string"
+							}
+						],
+						"internalType": "struct MaintenanceLog.ServiceRecord[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "serviceType",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "serviceProvider",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "partsReplaced",
+						"type": "string"
+					}
+				],
+				"name": "logService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "serviceHistory",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "date",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "serviceType",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "serviceProvider",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "partsReplaced",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/MaintenanceLog.sol": "MaintenanceLog"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/MaintenanceLog.sol": {
+			"keccak256": "0xccd63be8ce58e292ac37ab86cbbe8cc56d00165e3fed10f512a3c1375eda0e99",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fa51926a51a311f03386028ab27db1553a95c2e907f4474aa2d870ea97c5b339",
+				"dweb:/ipfs/QmWzTRS2LdsYtDnhc8hyyvTmgrX6r6182edGoyJ4uGMNUJ"
+			]
+		}
+	},
+	"version": 1
+}

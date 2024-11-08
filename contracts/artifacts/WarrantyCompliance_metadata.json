@@ -1,0 +1,142 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isUnderWarranty",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "expiryDate",
+						"type": "uint256"
+					}
+				],
+				"name": "WarrantyUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					}
+				],
+				"name": "checkWarrantyStatus",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "assetId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isUnderWarranty",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newExpiryDate",
+						"type": "uint256"
+					}
+				],
+				"name": "updateWarranty",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "warranties",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "isUnderWarranty",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiryDate",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/WarrantyCompliance.sol": "WarrantyCompliance"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/WarrantyCompliance.sol": {
+			"keccak256": "0xdf1e8563ae464823496bfc46c8320700e80a54c61fdf8cd72c4e4942c3b4217b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8a0606a59b6a08b2137694ce3841427b63e2bbf3db2abbd156ddabc871abbfbd",
+				"dweb:/ipfs/QmYovr5fy5BymNfyQZw3YfhyLbTCWncTdAp1oyXxyu8BQr"
+			]
+		}
+	},
+	"version": 1
+}
