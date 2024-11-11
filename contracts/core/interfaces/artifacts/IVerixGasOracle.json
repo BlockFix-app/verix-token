@@ -1,0 +1,385 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"calculateGasCost(uint256)": "59eae101",
+			"getLatestPrices()": "ff61ba5c",
+			"getPriceFeeds()": "6ca42ae3",
+			"getPriceLimits()": "a4dcbabc",
+			"getStaleThreshold()": "50b0ffb2",
+			"isPriceFeedStale(bool)": "87b6834c",
+			"maticToUsd(uint256)": "ada0e6fd",
+			"needsUpdate()": "346c9409",
+			"pause()": "8456cb59",
+			"paused()": "5c975abb",
+			"unpause()": "3f4ba83a",
+			"updatePriceFeed(address,bool)": "402ffc00",
+			"updatePriceLimits(uint256,uint256)": "3fc718ef",
+			"updatePrices()": "49dd1262",
+			"updateStaleThreshold(uint256)": "87f108d9"
+		}
+	},
+	"abi": [
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "newPrice",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "timestamp",
+					"type": "uint256"
+				}
+			],
+			"name": "GasPriceUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "newPrice",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "timestamp",
+					"type": "uint256"
+				}
+			],
+			"name": "MaticPriceUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "feed",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "bool",
+					"name": "isMaticFeed",
+					"type": "bool"
+				}
+			],
+			"name": "PriceFeedUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "minPrice",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "maxPrice",
+					"type": "uint256"
+				}
+			],
+			"name": "PriceLimitsUpdated",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "newThreshold",
+					"type": "uint256"
+				}
+			],
+			"name": "PriceStaleThresholdUpdated",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "gasAmount",
+					"type": "uint256"
+				}
+			],
+			"name": "calculateGasCost",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getLatestPrices",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "latestGasPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "latestMaticPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "updateTime",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getPriceFeeds",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "maticUsd",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "gasWei",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getPriceLimits",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "min",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "max",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getStaleThreshold",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bool",
+					"name": "isMaticFeed",
+					"type": "bool"
+				}
+			],
+			"name": "isPriceFeedStale",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "maticAmount",
+					"type": "uint256"
+				}
+			],
+			"name": "maticToUsd",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "needsUpdate",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "paused",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "unpause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "newFeed",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "isMaticFeed",
+					"type": "bool"
+				}
+			],
+			"name": "updatePriceFeed",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "newMinPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "newMaxPrice",
+					"type": "uint256"
+				}
+			],
+			"name": "updatePriceLimits",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "updatePrices",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "newThreshold",
+					"type": "uint256"
+				}
+			],
+			"name": "updateStaleThreshold",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

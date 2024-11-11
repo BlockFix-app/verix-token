@@ -1,0 +1,487 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "GasPriceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "MaticPriceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "feed",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isMaticFeed",
+						"type": "bool"
+					}
+				],
+				"name": "PriceFeedUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "maxPrice",
+						"type": "uint256"
+					}
+				],
+				"name": "PriceLimitsUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "PriceStaleThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "gasAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateGasCost",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getLatestPrices",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "latestGasPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "latestMaticPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "updateTime",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPriceFeeds",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "maticUsd",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "gasWei",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPriceLimits",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "min",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "max",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getStaleThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "isMaticFeed",
+						"type": "bool"
+					}
+				],
+				"name": "isPriceFeedStale",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "maticAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "maticToUsd",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "needsUpdate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newFeed",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isMaticFeed",
+						"type": "bool"
+					}
+				],
+				"name": "updatePriceFeed",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newMinPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newMaxPrice",
+						"type": "uint256"
+					}
+				],
+				"name": "updatePriceLimits",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "updatePrices",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "updateStaleThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"calculateGasCost(uint256)": {
+					"params": {
+						"gasAmount": "Amount of gas units"
+					},
+					"returns": {
+						"_0": "Gas cost in MATIC (with PRICE_PRECISION decimals)"
+					}
+				},
+				"getLatestPrices()": {
+					"returns": {
+						"latestGasPrice": "Latest gas price in wei",
+						"latestMaticPrice": "Latest MATIC/USD price",
+						"updateTime": "Timestamp of last update"
+					}
+				},
+				"getPriceFeeds()": {
+					"returns": {
+						"gasWei": "Gas/Wei price feed address",
+						"maticUsd": "MATIC/USD price feed address"
+					}
+				},
+				"getPriceLimits()": {
+					"returns": {
+						"max": "Maximum gas price",
+						"min": "Minimum gas price"
+					}
+				},
+				"getStaleThreshold()": {
+					"returns": {
+						"_0": "Threshold in seconds"
+					}
+				},
+				"isPriceFeedStale(bool)": {
+					"params": {
+						"isMaticFeed": "True to check MATIC/USD feed, false for gas price feed"
+					},
+					"returns": {
+						"_0": "True if price feed is stale"
+					}
+				},
+				"maticToUsd(uint256)": {
+					"params": {
+						"maticAmount": "Amount of MATIC to convert"
+					},
+					"returns": {
+						"_0": "USD value (with PRICE_PRECISION decimals)"
+					}
+				},
+				"needsUpdate()": {
+					"returns": {
+						"_0": "True if prices are stale"
+					}
+				},
+				"paused()": {
+					"returns": {
+						"_0": "True if paused"
+					}
+				},
+				"updatePriceFeed(address,bool)": {
+					"params": {
+						"isMaticFeed": "True if updating MATIC/USD feed, false for gas price feed",
+						"newFeed": "New price feed address"
+					}
+				},
+				"updatePriceLimits(uint256,uint256)": {
+					"params": {
+						"newMaxPrice": "New maximum gas price (in wei)",
+						"newMinPrice": "New minimum gas price (in wei)"
+					}
+				},
+				"updatePrices()": {
+					"details": "Fetches latest prices from Chainlink oracles"
+				},
+				"updateStaleThreshold(uint256)": {
+					"params": {
+						"newThreshold": "New threshold in seconds"
+					}
+				}
+			},
+			"title": "IVerixGasOracle",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"calculateGasCost(uint256)": {
+					"notice": "Calculates gas cost in MATIC for a given gas amount"
+				},
+				"getLatestPrices()": {
+					"notice": "Gets latest prices and update timestamp"
+				},
+				"getPriceFeeds()": {
+					"notice": "Gets price feed addresses"
+				},
+				"getPriceLimits()": {
+					"notice": "Gets price limits"
+				},
+				"getStaleThreshold()": {
+					"notice": "Gets current staleness threshold"
+				},
+				"isPriceFeedStale(bool)": {
+					"notice": "Checks if a specific price feed is stale"
+				},
+				"maticToUsd(uint256)": {
+					"notice": "Converts MATIC amount to USD value"
+				},
+				"needsUpdate()": {
+					"notice": "Checks if prices need updating"
+				},
+				"pause()": {
+					"notice": "Emergency pause"
+				},
+				"paused()": {
+					"notice": "Checks if contract is paused"
+				},
+				"unpause()": {
+					"notice": "Unpause"
+				},
+				"updatePriceFeed(address,bool)": {
+					"notice": "Updates price feed address"
+				},
+				"updatePriceLimits(uint256,uint256)": {
+					"notice": "Updates price limits"
+				},
+				"updatePrices()": {
+					"notice": "Updates both MATIC/USD and gas prices"
+				},
+				"updateStaleThreshold(uint256)": {
+					"notice": "Updates price staleness threshold"
+				}
+			},
+			"notice": "Interface for the gas oracle contract that manages price feeds and calculations",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IVerixGasOracle.sol": "IVerixGasOracle"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IVerixGasOracle.sol": {
+			"keccak256": "0xd95108dd6ef4ac48a676305c672a75280762c81851dabd7adb657c1b4acad441",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bb81b1bc9738472ec44cb93c8da32a22ba795d1c32df6b4ffb01813384b14846",
+				"dweb:/ipfs/QmRmVXUJSQFJK46QYZqMTamYe7rAN4BRhBVFbtwBqP2nDC"
+			]
+		}
+	},
+	"version": 1
+}

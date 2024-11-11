@@ -1,0 +1,507 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "EmergencyWithdraw",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tierLevel",
+						"type": "uint256"
+					}
+				],
+				"name": "GasCovered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newMinimum",
+						"type": "uint256"
+					}
+				],
+				"name": "MinimumBalanceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "PoolReplenished",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tierId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "minTokens",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "coveragePercent",
+						"type": "uint256"
+					}
+				],
+				"name": "TierConfigUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTier",
+						"type": "uint256"
+					}
+				],
+				"name": "TierUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "gasAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "coverGasFee",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "emergencyWithdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPoolStatus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "current",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minimum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalUsers",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tierId",
+						"type": "uint256"
+					}
+				],
+				"name": "getTier",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "minTokens",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "coveragePercent",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxDailyGas",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IVerixGasPool.Tier",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getUserGasUsage",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "dailyUsed",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastResetTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "totalLifetimeUsed",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IVerixGasPool.UserGasUsage",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getUserTierInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tier",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "coveragePercent",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxDaily",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "usedToday",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "replenishPool",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newMinimum",
+						"type": "uint256"
+					}
+				],
+				"name": "setMinimumPoolBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tierId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minTokens",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "coveragePercent",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxDailyGas",
+						"type": "uint256"
+					}
+				],
+				"name": "updateTier",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "updateUserTier",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"coverGasFee(address,uint256)": {
+					"params": {
+						"gasAmount": "Amount of gas to cover",
+						"user": "Address of the user"
+					},
+					"returns": {
+						"_0": "Amount of gas covered"
+					}
+				},
+				"emergencyWithdraw(uint256)": {
+					"params": {
+						"amount": "Amount to withdraw"
+					}
+				},
+				"getPoolStatus()": {
+					"returns": {
+						"current": "Current pool balance",
+						"minimum": "Minimum required balance",
+						"totalUsers": "Total number of users with tiers"
+					}
+				},
+				"getTier(uint256)": {
+					"params": {
+						"tierId": "Tier identifier"
+					},
+					"returns": {
+						"_0": "Tier configuration"
+					}
+				},
+				"getUserGasUsage(address)": {
+					"params": {
+						"user": "Address to check"
+					},
+					"returns": {
+						"_0": "UserGasUsage structure"
+					}
+				},
+				"getUserTierInfo(address)": {
+					"params": {
+						"user": "Address to check"
+					},
+					"returns": {
+						"coveragePercent": "Current coverage percentage",
+						"maxDaily": "Maximum daily gas limit",
+						"tier": "Current tier level",
+						"usedToday": "Gas used today"
+					}
+				},
+				"setMinimumPoolBalance(uint256)": {
+					"params": {
+						"newMinimum": "New minimum balance"
+					}
+				},
+				"updateTier(uint256,uint256,uint256,uint256)": {
+					"params": {
+						"coveragePercent": "Coverage percentage in basis points",
+						"maxDailyGas": "Maximum daily gas coverage",
+						"minTokens": "Minimum tokens required",
+						"tierId": "Tier identifier"
+					}
+				},
+				"updateUserTier(address)": {
+					"params": {
+						"user": "Address of the user"
+					}
+				}
+			},
+			"title": "IVerixGasPool",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"coverGasFee(address,uint256)": {
+					"notice": "Covers gas fees for eligible users"
+				},
+				"emergencyWithdraw(uint256)": {
+					"notice": "Emergency withdrawal of funds"
+				},
+				"getPoolStatus()": {
+					"notice": "Gets pool status information"
+				},
+				"getTier(uint256)": {
+					"notice": "Gets tier configuration"
+				},
+				"getUserGasUsage(address)": {
+					"notice": "Gets user's gas usage information"
+				},
+				"getUserTierInfo(address)": {
+					"notice": "Gets user's current tier information"
+				},
+				"pause()": {
+					"notice": "Pauses the contract"
+				},
+				"replenishPool()": {
+					"notice": "Replenishes the gas pool"
+				},
+				"setMinimumPoolBalance(uint256)": {
+					"notice": "Sets minimum pool balance"
+				},
+				"unpause()": {
+					"notice": "Unpauses the contract"
+				},
+				"updateTier(uint256,uint256,uint256,uint256)": {
+					"notice": "Updates tier configuration"
+				},
+				"updateUserTier(address)": {
+					"notice": "Updates user's tier based on their token balance"
+				}
+			},
+			"notice": "Interface for the gas pool contract that manages gas fee coverage",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IVerixGasPool.sol": "IVerixGasPool"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IVerixGasPool.sol": {
+			"keccak256": "0x802c97cb6c9be5f2e52299bda09fb21db511ec105632651e6d91e56613c4afb9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://281dd47c3f49b3ef1e376fb2ccbac6064ddb72bc681c0ac2e0ea9d4ca6b383e3",
+				"dweb:/ipfs/QmPJ1Tcwq1ZABufZxXG2PJE3sBSKSG1GghQtJBXxTkKfxw"
+			]
+		}
+	},
+	"version": 1
+}

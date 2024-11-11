@@ -1,0 +1,2022 @@
+{
+	"id": "4ecc2fd734807cb5823957de7869bbc9",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/interfaces/IVerixGasOracle.sol": {
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\n/**\r\n * @title IVerixGasOracle\r\n * @notice Interface for the gas oracle contract that manages price feeds and calculations\r\n */\r\ninterface IVerixGasOracle {\r\n    // Events\r\n    event GasPriceUpdated(uint256 newPrice, uint256 timestamp);\r\n    event MaticPriceUpdated(uint256 newPrice, uint256 timestamp);\r\n    event PriceLimitsUpdated(uint256 minPrice, uint256 maxPrice);\r\n    event PriceFeedUpdated(address indexed feed, bool isMaticFeed);\r\n    event PriceStaleThresholdUpdated(uint256 newThreshold);\r\n\r\n    /**\r\n     * @notice Updates both MATIC/USD and gas prices\r\n     * @dev Fetches latest prices from Chainlink oracles\r\n     */\r\n    function updatePrices() external;\r\n\r\n    /**\r\n     * @notice Calculates gas cost in MATIC for a given gas amount\r\n     * @param gasAmount Amount of gas units\r\n     * @return Gas cost in MATIC (with PRICE_PRECISION decimals)\r\n     */\r\n    function calculateGasCost(uint256 gasAmount) external view returns (uint256);\r\n\r\n    /**\r\n     * @notice Converts MATIC amount to USD value\r\n     * @param maticAmount Amount of MATIC to convert\r\n     * @return USD value (with PRICE_PRECISION decimals)\r\n     */\r\n    function maticToUsd(uint256 maticAmount) external view returns (uint256);\r\n\r\n    /**\r\n     * @notice Updates price limits\r\n     * @param newMinPrice New minimum gas price (in wei)\r\n     * @param newMaxPrice New maximum gas price (in wei)\r\n     */\r\n    function updatePriceLimits(\r\n        uint256 newMinPrice,\r\n        uint256 newMaxPrice\r\n    ) external;\r\n\r\n    /**\r\n     * @notice Gets latest prices and update timestamp\r\n     * @return latestGasPrice Latest gas price in wei\r\n     * @return latestMaticPrice Latest MATIC/USD price\r\n     * @return updateTime Timestamp of last update\r\n     */\r\n    function getLatestPrices() external view returns (\r\n        uint256 latestGasPrice,\r\n        uint256 latestMaticPrice,\r\n        uint256 updateTime\r\n    );\r\n\r\n    /**\r\n     * @notice Checks if prices need updating\r\n     * @return True if prices are stale\r\n     */\r\n    function needsUpdate() external view returns (bool);\r\n\r\n    /**\r\n     * @notice Gets price feed addresses\r\n     * @return maticUsd MATIC/USD price feed address\r\n     * @return gasWei Gas/Wei price feed address\r\n     */\r\n    function getPriceFeeds() external view returns (\r\n        address maticUsd,\r\n        address gasWei\r\n    );\r\n\r\n    /**\r\n     * @notice Gets price limits\r\n     * @return min Minimum gas price\r\n     * @return max Maximum gas price\r\n     */\r\n    function getPriceLimits() external view returns (\r\n        uint256 min,\r\n        uint256 max\r\n    );\r\n\r\n    /**\r\n     * @notice Updates price feed address\r\n     * @param newFeed New price feed address\r\n     * @param isMaticFeed True if updating MATIC/USD feed, false for gas price feed\r\n     */\r\n    function updatePriceFeed(\r\n        address newFeed,\r\n        bool isMaticFeed\r\n    ) external;\r\n\r\n    /**\r\n     * @notice Updates price staleness threshold\r\n     * @param newThreshold New threshold in seconds\r\n     */\r\n    function updateStaleThreshold(uint256 newThreshold) external;\r\n\r\n    /**\r\n     * @notice Gets current staleness threshold\r\n     * @return Threshold in seconds\r\n     */\r\n    function getStaleThreshold() external view returns (uint256);\r\n\r\n    /**\r\n     * @notice Checks if a specific price feed is stale\r\n     * @param isMaticFeed True to check MATIC/USD feed, false for gas price feed\r\n     * @return True if price feed is stale\r\n     */\r\n    function isPriceFeedStale(bool isMaticFeed) external view returns (bool);\r\n\r\n    /**\r\n     * @notice Emergency pause\r\n     */\r\n    function pause() external;\r\n\r\n    /**\r\n     * @notice Unpause\r\n     */\r\n    function unpause() external;\r\n\r\n    /**\r\n     * @notice Checks if contract is paused\r\n     * @return True if paused\r\n     */\r\n    function paused() external view returns (bool);\r\n}"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"contracts": {
+			"contracts/interfaces/IVerixGasOracle.sol": {
+				"IVerixGasOracle": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newPrice",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "timestamp",
+									"type": "uint256"
+								}
+							],
+							"name": "GasPriceUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newPrice",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "timestamp",
+									"type": "uint256"
+								}
+							],
+							"name": "MaticPriceUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "feed",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "bool",
+									"name": "isMaticFeed",
+									"type": "bool"
+								}
+							],
+							"name": "PriceFeedUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "minPrice",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "maxPrice",
+									"type": "uint256"
+								}
+							],
+							"name": "PriceLimitsUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newThreshold",
+									"type": "uint256"
+								}
+							],
+							"name": "PriceStaleThresholdUpdated",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "gasAmount",
+									"type": "uint256"
+								}
+							],
+							"name": "calculateGasCost",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getLatestPrices",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "latestGasPrice",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "latestMaticPrice",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "updateTime",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getPriceFeeds",
+							"outputs": [
+								{
+									"internalType": "address",
+									"name": "maticUsd",
+									"type": "address"
+								},
+								{
+									"internalType": "address",
+									"name": "gasWei",
+									"type": "address"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getPriceLimits",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "min",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "max",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getStaleThreshold",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "bool",
+									"name": "isMaticFeed",
+									"type": "bool"
+								}
+							],
+							"name": "isPriceFeedStale",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "maticAmount",
+									"type": "uint256"
+								}
+							],
+							"name": "maticToUsd",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "needsUpdate",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "pause",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "paused",
+							"outputs": [
+								{
+									"internalType": "bool",
+									"name": "",
+									"type": "bool"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "unpause",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "newFeed",
+									"type": "address"
+								},
+								{
+									"internalType": "bool",
+									"name": "isMaticFeed",
+									"type": "bool"
+								}
+							],
+							"name": "updatePriceFeed",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "newMinPrice",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "newMaxPrice",
+									"type": "uint256"
+								}
+							],
+							"name": "updatePriceLimits",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "updatePrices",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "newThreshold",
+									"type": "uint256"
+								}
+							],
+							"name": "updateStaleThreshold",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"calculateGasCost(uint256)": {
+								"params": {
+									"gasAmount": "Amount of gas units"
+								},
+								"returns": {
+									"_0": "Gas cost in MATIC (with PRICE_PRECISION decimals)"
+								}
+							},
+							"getLatestPrices()": {
+								"returns": {
+									"latestGasPrice": "Latest gas price in wei",
+									"latestMaticPrice": "Latest MATIC/USD price",
+									"updateTime": "Timestamp of last update"
+								}
+							},
+							"getPriceFeeds()": {
+								"returns": {
+									"gasWei": "Gas/Wei price feed address",
+									"maticUsd": "MATIC/USD price feed address"
+								}
+							},
+							"getPriceLimits()": {
+								"returns": {
+									"max": "Maximum gas price",
+									"min": "Minimum gas price"
+								}
+							},
+							"getStaleThreshold()": {
+								"returns": {
+									"_0": "Threshold in seconds"
+								}
+							},
+							"isPriceFeedStale(bool)": {
+								"params": {
+									"isMaticFeed": "True to check MATIC/USD feed, false for gas price feed"
+								},
+								"returns": {
+									"_0": "True if price feed is stale"
+								}
+							},
+							"maticToUsd(uint256)": {
+								"params": {
+									"maticAmount": "Amount of MATIC to convert"
+								},
+								"returns": {
+									"_0": "USD value (with PRICE_PRECISION decimals)"
+								}
+							},
+							"needsUpdate()": {
+								"returns": {
+									"_0": "True if prices are stale"
+								}
+							},
+							"paused()": {
+								"returns": {
+									"_0": "True if paused"
+								}
+							},
+							"updatePriceFeed(address,bool)": {
+								"params": {
+									"isMaticFeed": "True if updating MATIC/USD feed, false for gas price feed",
+									"newFeed": "New price feed address"
+								}
+							},
+							"updatePriceLimits(uint256,uint256)": {
+								"params": {
+									"newMaxPrice": "New maximum gas price (in wei)",
+									"newMinPrice": "New minimum gas price (in wei)"
+								}
+							},
+							"updatePrices()": {
+								"details": "Fetches latest prices from Chainlink oracles"
+							},
+							"updateStaleThreshold(uint256)": {
+								"params": {
+									"newThreshold": "New threshold in seconds"
+								}
+							}
+						},
+						"title": "IVerixGasOracle",
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"calculateGasCost(uint256)": "59eae101",
+							"getLatestPrices()": "ff61ba5c",
+							"getPriceFeeds()": "6ca42ae3",
+							"getPriceLimits()": "a4dcbabc",
+							"getStaleThreshold()": "50b0ffb2",
+							"isPriceFeedStale(bool)": "87b6834c",
+							"maticToUsd(uint256)": "ada0e6fd",
+							"needsUpdate()": "346c9409",
+							"pause()": "8456cb59",
+							"paused()": "5c975abb",
+							"unpause()": "3f4ba83a",
+							"updatePriceFeed(address,bool)": "402ffc00",
+							"updatePriceLimits(uint256,uint256)": "3fc718ef",
+							"updatePrices()": "49dd1262",
+							"updateStaleThreshold(uint256)": "87f108d9"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"GasPriceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"MaticPriceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"feed\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"isMaticFeed\",\"type\":\"bool\"}],\"name\":\"PriceFeedUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxPrice\",\"type\":\"uint256\"}],\"name\":\"PriceLimitsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newThreshold\",\"type\":\"uint256\"}],\"name\":\"PriceStaleThresholdUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"gasAmount\",\"type\":\"uint256\"}],\"name\":\"calculateGasCost\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLatestPrices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"latestGasPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"latestMaticPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"updateTime\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPriceFeeds\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"maticUsd\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"gasWei\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPriceLimits\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"min\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaleThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"isMaticFeed\",\"type\":\"bool\"}],\"name\":\"isPriceFeedStale\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"maticAmount\",\"type\":\"uint256\"}],\"name\":\"maticToUsd\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"needsUpdate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newFeed\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isMaticFeed\",\"type\":\"bool\"}],\"name\":\"updatePriceFeed\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newMinPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"newMaxPrice\",\"type\":\"uint256\"}],\"name\":\"updatePriceLimits\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"updatePrices\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newThreshold\",\"type\":\"uint256\"}],\"name\":\"updateStaleThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"calculateGasCost(uint256)\":{\"params\":{\"gasAmount\":\"Amount of gas units\"},\"returns\":{\"_0\":\"Gas cost in MATIC (with PRICE_PRECISION decimals)\"}},\"getLatestPrices()\":{\"returns\":{\"latestGasPrice\":\"Latest gas price in wei\",\"latestMaticPrice\":\"Latest MATIC/USD price\",\"updateTime\":\"Timestamp of last update\"}},\"getPriceFeeds()\":{\"returns\":{\"gasWei\":\"Gas/Wei price feed address\",\"maticUsd\":\"MATIC/USD price feed address\"}},\"getPriceLimits()\":{\"returns\":{\"max\":\"Maximum gas price\",\"min\":\"Minimum gas price\"}},\"getStaleThreshold()\":{\"returns\":{\"_0\":\"Threshold in seconds\"}},\"isPriceFeedStale(bool)\":{\"params\":{\"isMaticFeed\":\"True to check MATIC/USD feed, false for gas price feed\"},\"returns\":{\"_0\":\"True if price feed is stale\"}},\"maticToUsd(uint256)\":{\"params\":{\"maticAmount\":\"Amount of MATIC to convert\"},\"returns\":{\"_0\":\"USD value (with PRICE_PRECISION decimals)\"}},\"needsUpdate()\":{\"returns\":{\"_0\":\"True if prices are stale\"}},\"paused()\":{\"returns\":{\"_0\":\"True if paused\"}},\"updatePriceFeed(address,bool)\":{\"params\":{\"isMaticFeed\":\"True if updating MATIC/USD feed, false for gas price feed\",\"newFeed\":\"New price feed address\"}},\"updatePriceLimits(uint256,uint256)\":{\"params\":{\"newMaxPrice\":\"New maximum gas price (in wei)\",\"newMinPrice\":\"New minimum gas price (in wei)\"}},\"updatePrices()\":{\"details\":\"Fetches latest prices from Chainlink oracles\"},\"updateStaleThreshold(uint256)\":{\"params\":{\"newThreshold\":\"New threshold in seconds\"}}},\"title\":\"IVerixGasOracle\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"calculateGasCost(uint256)\":{\"notice\":\"Calculates gas cost in MATIC for a given gas amount\"},\"getLatestPrices()\":{\"notice\":\"Gets latest prices and update timestamp\"},\"getPriceFeeds()\":{\"notice\":\"Gets price feed addresses\"},\"getPriceLimits()\":{\"notice\":\"Gets price limits\"},\"getStaleThreshold()\":{\"notice\":\"Gets current staleness threshold\"},\"isPriceFeedStale(bool)\":{\"notice\":\"Checks if a specific price feed is stale\"},\"maticToUsd(uint256)\":{\"notice\":\"Converts MATIC amount to USD value\"},\"needsUpdate()\":{\"notice\":\"Checks if prices need updating\"},\"pause()\":{\"notice\":\"Emergency pause\"},\"paused()\":{\"notice\":\"Checks if contract is paused\"},\"unpause()\":{\"notice\":\"Unpause\"},\"updatePriceFeed(address,bool)\":{\"notice\":\"Updates price feed address\"},\"updatePriceLimits(uint256,uint256)\":{\"notice\":\"Updates price limits\"},\"updatePrices()\":{\"notice\":\"Updates both MATIC/USD and gas prices\"},\"updateStaleThreshold(uint256)\":{\"notice\":\"Updates price staleness threshold\"}},\"notice\":\"Interface for the gas oracle contract that manages price feeds and calculations\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IVerixGasOracle.sol\":\"IVerixGasOracle\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/interfaces/IVerixGasOracle.sol\":{\"keccak256\":\"0xd95108dd6ef4ac48a676305c672a75280762c81851dabd7adb657c1b4acad441\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bb81b1bc9738472ec44cb93c8da32a22ba795d1c32df6b4ffb01813384b14846\",\"dweb:/ipfs/QmRmVXUJSQFJK46QYZqMTamYe7rAN4BRhBVFbtwBqP2nDC\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"calculateGasCost(uint256)": {
+								"notice": "Calculates gas cost in MATIC for a given gas amount"
+							},
+							"getLatestPrices()": {
+								"notice": "Gets latest prices and update timestamp"
+							},
+							"getPriceFeeds()": {
+								"notice": "Gets price feed addresses"
+							},
+							"getPriceLimits()": {
+								"notice": "Gets price limits"
+							},
+							"getStaleThreshold()": {
+								"notice": "Gets current staleness threshold"
+							},
+							"isPriceFeedStale(bool)": {
+								"notice": "Checks if a specific price feed is stale"
+							},
+							"maticToUsd(uint256)": {
+								"notice": "Converts MATIC amount to USD value"
+							},
+							"needsUpdate()": {
+								"notice": "Checks if prices need updating"
+							},
+							"pause()": {
+								"notice": "Emergency pause"
+							},
+							"paused()": {
+								"notice": "Checks if contract is paused"
+							},
+							"unpause()": {
+								"notice": "Unpause"
+							},
+							"updatePriceFeed(address,bool)": {
+								"notice": "Updates price feed address"
+							},
+							"updatePriceLimits(uint256,uint256)": {
+								"notice": "Updates price limits"
+							},
+							"updatePrices()": {
+								"notice": "Updates both MATIC/USD and gas prices"
+							},
+							"updateStaleThreshold(uint256)": {
+								"notice": "Updates price staleness threshold"
+							}
+						},
+						"notice": "Interface for the gas oracle contract that manages price feeds and calculations",
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"contracts/interfaces/IVerixGasOracle.sol": {
+				"ast": {
+					"absolutePath": "contracts/interfaces/IVerixGasOracle.sol",
+					"exportedSymbols": {
+						"IVerixGasOracle": [
+							133
+						]
+					},
+					"id": 134,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".19"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "33:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IVerixGasOracle",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"documentation": {
+								"id": 2,
+								"nodeType": "StructuredDocumentation",
+								"src": "61:127:0",
+								"text": " @title IVerixGasOracle\n @notice Interface for the gas oracle contract that manages price feeds and calculations"
+							},
+							"fullyImplemented": false,
+							"id": 133,
+							"linearizedBaseContracts": [
+								133
+							],
+							"name": "IVerixGasOracle",
+							"nameLocation": "200:15:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"anonymous": false,
+									"eventSelector": "4afe44d7dc150ca7bf2407ab84e694efb1898578aa5008d8d4265039f411e4c3",
+									"id": 8,
+									"name": "GasPriceUpdated",
+									"nameLocation": "244:15:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 7,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 4,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newPrice",
+												"nameLocation": "268:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 8,
+												"src": "260:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 3,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "260:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 6,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "timestamp",
+												"nameLocation": "286:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 8,
+												"src": "278:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 5,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "278:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "259:37:0"
+									},
+									"src": "238:59:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "59f300e8d75acdadc76c53167fa44ae18fbe31fcdd30da764fb482315cf2f3b3",
+									"id": 14,
+									"name": "MaticPriceUpdated",
+									"nameLocation": "309:17:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 13,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 10,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newPrice",
+												"nameLocation": "335:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 14,
+												"src": "327:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 9,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "327:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 12,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "timestamp",
+												"nameLocation": "353:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 14,
+												"src": "345:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 11,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "345:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "326:37:0"
+									},
+									"src": "303:61:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "9f97cdefd2295afb3ddc609084de48a4f3c55c19db0fb209b356e259570db8dd",
+									"id": 20,
+									"name": "PriceLimitsUpdated",
+									"nameLocation": "376:18:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 19,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 16,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "minPrice",
+												"nameLocation": "403:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "395:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 15,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "395:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 18,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "maxPrice",
+												"nameLocation": "421:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "413:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 17,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "413:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "394:36:0"
+									},
+									"src": "370:61:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "72072d2102d704f509b3eeb50c3bd4432870d4caf31f15c79763ac4c1c838b3b",
+									"id": 26,
+									"name": "PriceFeedUpdated",
+									"nameLocation": "443:16:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 25,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 22,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "feed",
+												"nameLocation": "476:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 26,
+												"src": "460:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 21,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "460:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 24,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "isMaticFeed",
+												"nameLocation": "487:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 26,
+												"src": "482:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 23,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "482:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "459:40:0"
+									},
+									"src": "437:63:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "ac6312a233c9af7d39e05c65a867e87b7868bb308c096b32e46a02967dfad709",
+									"id": 30,
+									"name": "PriceStaleThresholdUpdated",
+									"nameLocation": "512:26:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 29,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 28,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newThreshold",
+												"nameLocation": "547:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 30,
+												"src": "539:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 27,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "539:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "538:22:0"
+									},
+									"src": "506:55:0"
+								},
+								{
+									"documentation": {
+										"id": 31,
+										"nodeType": "StructuredDocumentation",
+										"src": "569:124:0",
+										"text": " @notice Updates both MATIC/USD and gas prices\n @dev Fetches latest prices from Chainlink oracles"
+									},
+									"functionSelector": "49dd1262",
+									"id": 34,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updatePrices",
+									"nameLocation": "708:12:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 32,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "720:2:0"
+									},
+									"returnParameters": {
+										"id": 33,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "731:0:0"
+									},
+									"scope": 133,
+									"src": "699:33:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 35,
+										"nodeType": "StructuredDocumentation",
+										"src": "740:191:0",
+										"text": " @notice Calculates gas cost in MATIC for a given gas amount\n @param gasAmount Amount of gas units\n @return Gas cost in MATIC (with PRICE_PRECISION decimals)"
+									},
+									"functionSelector": "59eae101",
+									"id": 42,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "calculateGasCost",
+									"nameLocation": "946:16:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 38,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 37,
+												"mutability": "mutable",
+												"name": "gasAmount",
+												"nameLocation": "971:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 42,
+												"src": "963:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 36,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "963:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "962:19:0"
+									},
+									"returnParameters": {
+										"id": 41,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 40,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 42,
+												"src": "1005:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 39,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1005:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1004:9:0"
+									},
+									"scope": 133,
+									"src": "937:77:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 43,
+										"nodeType": "StructuredDocumentation",
+										"src": "1022:175:0",
+										"text": " @notice Converts MATIC amount to USD value\n @param maticAmount Amount of MATIC to convert\n @return USD value (with PRICE_PRECISION decimals)"
+									},
+									"functionSelector": "ada0e6fd",
+									"id": 50,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "maticToUsd",
+									"nameLocation": "1212:10:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 46,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 45,
+												"mutability": "mutable",
+												"name": "maticAmount",
+												"nameLocation": "1231:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 50,
+												"src": "1223:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 44,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1223:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1222:21:0"
+									},
+									"returnParameters": {
+										"id": 49,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 48,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 50,
+												"src": "1267:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 47,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1267:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1266:9:0"
+									},
+									"scope": 133,
+									"src": "1203:73:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 51,
+										"nodeType": "StructuredDocumentation",
+										"src": "1284:165:0",
+										"text": " @notice Updates price limits\n @param newMinPrice New minimum gas price (in wei)\n @param newMaxPrice New maximum gas price (in wei)"
+									},
+									"functionSelector": "3fc718ef",
+									"id": 58,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updatePriceLimits",
+									"nameLocation": "1464:17:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 56,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 53,
+												"mutability": "mutable",
+												"name": "newMinPrice",
+												"nameLocation": "1500:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 58,
+												"src": "1492:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 52,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1492:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 55,
+												"mutability": "mutable",
+												"name": "newMaxPrice",
+												"nameLocation": "1530:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 58,
+												"src": "1522:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 54,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1522:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1481:67:0"
+									},
+									"returnParameters": {
+										"id": 57,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1557:0:0"
+									},
+									"scope": 133,
+									"src": "1455:103:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 59,
+										"nodeType": "StructuredDocumentation",
+										"src": "1566:231:0",
+										"text": " @notice Gets latest prices and update timestamp\n @return latestGasPrice Latest gas price in wei\n @return latestMaticPrice Latest MATIC/USD price\n @return updateTime Timestamp of last update"
+									},
+									"functionSelector": "ff61ba5c",
+									"id": 68,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getLatestPrices",
+									"nameLocation": "1812:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 60,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1827:2:0"
+									},
+									"returnParameters": {
+										"id": 67,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 62,
+												"mutability": "mutable",
+												"name": "latestGasPrice",
+												"nameLocation": "1871:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 68,
+												"src": "1863:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 61,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1863:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 64,
+												"mutability": "mutable",
+												"name": "latestMaticPrice",
+												"nameLocation": "1904:16:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 68,
+												"src": "1896:24:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 63,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1896:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 66,
+												"mutability": "mutable",
+												"name": "updateTime",
+												"nameLocation": "1939:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 68,
+												"src": "1931:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 65,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1931:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1852:104:0"
+									},
+									"scope": 133,
+									"src": "1803:154:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 69,
+										"nodeType": "StructuredDocumentation",
+										"src": "1965:100:0",
+										"text": " @notice Checks if prices need updating\n @return True if prices are stale"
+									},
+									"functionSelector": "346c9409",
+									"id": 74,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "needsUpdate",
+									"nameLocation": "2080:11:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 70,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2091:2:0"
+									},
+									"returnParameters": {
+										"id": 73,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 72,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 74,
+												"src": "2117:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 71,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "2117:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2116:6:0"
+									},
+									"scope": 133,
+									"src": "2071:52:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 75,
+										"nodeType": "StructuredDocumentation",
+										"src": "2131:158:0",
+										"text": " @notice Gets price feed addresses\n @return maticUsd MATIC/USD price feed address\n @return gasWei Gas/Wei price feed address"
+									},
+									"functionSelector": "6ca42ae3",
+									"id": 82,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getPriceFeeds",
+									"nameLocation": "2304:13:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 76,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2317:2:0"
+									},
+									"returnParameters": {
+										"id": 81,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 78,
+												"mutability": "mutable",
+												"name": "maticUsd",
+												"nameLocation": "2361:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 82,
+												"src": "2353:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 77,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2353:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 80,
+												"mutability": "mutable",
+												"name": "gasWei",
+												"nameLocation": "2388:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 82,
+												"src": "2380:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 79,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2380:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2342:59:0"
+									},
+									"scope": 133,
+									"src": "2295:107:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 83,
+										"nodeType": "StructuredDocumentation",
+										"src": "2410:122:0",
+										"text": " @notice Gets price limits\n @return min Minimum gas price\n @return max Maximum gas price"
+									},
+									"functionSelector": "a4dcbabc",
+									"id": 90,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getPriceLimits",
+									"nameLocation": "2547:14:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 84,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2561:2:0"
+									},
+									"returnParameters": {
+										"id": 89,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 86,
+												"mutability": "mutable",
+												"name": "min",
+												"nameLocation": "2605:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 90,
+												"src": "2597:11:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 85,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2597:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 88,
+												"mutability": "mutable",
+												"name": "max",
+												"nameLocation": "2627:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 90,
+												"src": "2619:11:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 87,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2619:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2586:51:0"
+									},
+									"scope": 133,
+									"src": "2538:100:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 91,
+										"nodeType": "StructuredDocumentation",
+										"src": "2646:186:0",
+										"text": " @notice Updates price feed address\n @param newFeed New price feed address\n @param isMaticFeed True if updating MATIC/USD feed, false for gas price feed"
+									},
+									"functionSelector": "402ffc00",
+									"id": 98,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updatePriceFeed",
+									"nameLocation": "2847:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 96,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 93,
+												"mutability": "mutable",
+												"name": "newFeed",
+												"nameLocation": "2881:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 98,
+												"src": "2873:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 92,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2873:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 95,
+												"mutability": "mutable",
+												"name": "isMaticFeed",
+												"nameLocation": "2904:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 98,
+												"src": "2899:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 94,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "2899:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2862:60:0"
+									},
+									"returnParameters": {
+										"id": 97,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2931:0:0"
+									},
+									"scope": 133,
+									"src": "2838:94:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 99,
+										"nodeType": "StructuredDocumentation",
+										"src": "2940:115:0",
+										"text": " @notice Updates price staleness threshold\n @param newThreshold New threshold in seconds"
+									},
+									"functionSelector": "87f108d9",
+									"id": 104,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updateStaleThreshold",
+									"nameLocation": "3070:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 102,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 101,
+												"mutability": "mutable",
+												"name": "newThreshold",
+												"nameLocation": "3099:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 104,
+												"src": "3091:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 100,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3091:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3090:22:0"
+									},
+									"returnParameters": {
+										"id": 103,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3121:0:0"
+									},
+									"scope": 133,
+									"src": "3061:61:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 105,
+										"nodeType": "StructuredDocumentation",
+										"src": "3130:98:0",
+										"text": " @notice Gets current staleness threshold\n @return Threshold in seconds"
+									},
+									"functionSelector": "50b0ffb2",
+									"id": 110,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getStaleThreshold",
+									"nameLocation": "3243:17:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 106,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3260:2:0"
+									},
+									"returnParameters": {
+										"id": 109,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 108,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 110,
+												"src": "3286:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 107,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3286:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3285:9:0"
+									},
+									"scope": 133,
+									"src": "3234:61:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 111,
+										"nodeType": "StructuredDocumentation",
+										"src": "3303:195:0",
+										"text": " @notice Checks if a specific price feed is stale\n @param isMaticFeed True to check MATIC/USD feed, false for gas price feed\n @return True if price feed is stale"
+									},
+									"functionSelector": "87b6834c",
+									"id": 118,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "isPriceFeedStale",
+									"nameLocation": "3513:16:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 114,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 113,
+												"mutability": "mutable",
+												"name": "isMaticFeed",
+												"nameLocation": "3535:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 118,
+												"src": "3530:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 112,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "3530:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3529:18:0"
+									},
+									"returnParameters": {
+										"id": 117,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 116,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 118,
+												"src": "3571:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 115,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "3571:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3570:6:0"
+									},
+									"scope": 133,
+									"src": "3504:73:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 119,
+										"nodeType": "StructuredDocumentation",
+										"src": "3585:44:0",
+										"text": " @notice Emergency pause"
+									},
+									"functionSelector": "8456cb59",
+									"id": 122,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "pause",
+									"nameLocation": "3644:5:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 120,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3649:2:0"
+									},
+									"returnParameters": {
+										"id": 121,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3660:0:0"
+									},
+									"scope": 133,
+									"src": "3635:26:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 123,
+										"nodeType": "StructuredDocumentation",
+										"src": "3669:36:0",
+										"text": " @notice Unpause"
+									},
+									"functionSelector": "3f4ba83a",
+									"id": 126,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "unpause",
+									"nameLocation": "3720:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 124,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3727:2:0"
+									},
+									"returnParameters": {
+										"id": 125,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3738:0:0"
+									},
+									"scope": 133,
+									"src": "3711:28:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 127,
+										"nodeType": "StructuredDocumentation",
+										"src": "3747:88:0",
+										"text": " @notice Checks if contract is paused\n @return True if paused"
+									},
+									"functionSelector": "5c975abb",
+									"id": 132,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "paused",
+									"nameLocation": "3850:6:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 128,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3856:2:0"
+									},
+									"returnParameters": {
+										"id": 131,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 130,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 132,
+												"src": "3882:4:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 129,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "3882:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3881:6:0"
+									},
+									"scope": 133,
+									"src": "3841:47:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 134,
+							"src": "190:3701:0",
+							"usedErrors": [],
+							"usedEvents": [
+								8,
+								14,
+								20,
+								26,
+								30
+							]
+						}
+					],
+					"src": "33:3858:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

@@ -1,0 +1,2287 @@
+{
+	"id": "3822ce94985068b85ae34ae302ad7a4c",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/interfaces/IVerixGasPool.sol": {
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\n/**\r\n * @title IVerixGasPool\r\n * @notice Interface for the gas pool contract that manages gas fee coverage\r\n */\r\ninterface IVerixGasPool {\r\n    /**\r\n     * @dev Struct to define tier configuration\r\n     */\r\n    struct Tier {\r\n        uint256 minTokens;      // Minimum tokens required for tier\r\n        uint256 coveragePercent; // Coverage percentage in basis points (100% = 10000)\r\n        uint256 maxDailyGas;    // Maximum daily gas coverage\r\n    }\r\n\r\n    /**\r\n     * @dev Struct to track user gas usage\r\n     */\r\n    struct UserGasUsage {\r\n        uint256 dailyUsed;        // Gas used today\r\n        uint256 lastResetTime;    // Last daily reset timestamp\r\n        uint256 totalLifetimeUsed; // Total gas used lifetime\r\n    }\r\n\r\n    // Events\r\n    event GasCovered(address indexed user, uint256 amount, uint256 tierLevel);\r\n    event TierUpdated(address indexed user, uint256 newTier);\r\n    event PoolReplenished(uint256 amount);\r\n    event TierConfigUpdated(uint256 tierId, uint256 minTokens, uint256 coveragePercent);\r\n    event EmergencyWithdraw(address indexed admin, uint256 amount);\r\n    event MinimumBalanceUpdated(uint256 newMinimum);\r\n\r\n    /**\r\n     * @notice Updates user's tier based on their token balance\r\n     * @param user Address of the user\r\n     */\r\n    function updateUserTier(address user) external;\r\n\r\n    /**\r\n     * @notice Covers gas fees for eligible users\r\n     * @param user Address of the user\r\n     * @param gasAmount Amount of gas to cover\r\n     * @return Amount of gas covered\r\n     */\r\n    function coverGasFee(address user, uint256 gasAmount) external returns (uint256);\r\n\r\n    /**\r\n     * @notice Replenishes the gas pool\r\n     */\r\n    function replenishPool() external payable;\r\n\r\n    /**\r\n     * @notice Updates tier configuration\r\n     * @param tierId Tier identifier\r\n     * @param minTokens Minimum tokens required\r\n     * @param coveragePercent Coverage percentage in basis points\r\n     * @param maxDailyGas Maximum daily gas coverage\r\n     */\r\n    function updateTier(\r\n        uint256 tierId,\r\n        uint256 minTokens,\r\n        uint256 coveragePercent,\r\n        uint256 maxDailyGas\r\n    ) external;\r\n\r\n    /**\r\n     * @notice Gets user's current tier information\r\n     * @param user Address to check\r\n     * @return tier Current tier level\r\n     * @return coveragePercent Current coverage percentage\r\n     * @return maxDaily Maximum daily gas limit\r\n     * @return usedToday Gas used today\r\n     */\r\n    function getUserTierInfo(address user) external view returns (\r\n        uint256 tier,\r\n        uint256 coveragePercent,\r\n        uint256 maxDaily,\r\n        uint256 usedToday\r\n    );\r\n\r\n    /**\r\n     * @notice Gets tier configuration\r\n     * @param tierId Tier identifier\r\n     * @return Tier configuration\r\n     */\r\n    function getTier(uint256 tierId) external view returns (Tier memory);\r\n\r\n    /**\r\n     * @notice Gets user's gas usage information\r\n     * @param user Address to check\r\n     * @return UserGasUsage structure\r\n     */\r\n    function getUserGasUsage(address user) external view returns (UserGasUsage memory);\r\n\r\n    /**\r\n     * @notice Gets pool status information\r\n     * @return current Current pool balance\r\n     * @return minimum Minimum required balance\r\n     * @return totalUsers Total number of users with tiers\r\n     */\r\n    function getPoolStatus() external view returns (\r\n        uint256 current,\r\n        uint256 minimum,\r\n        uint256 totalUsers\r\n    );\r\n\r\n    /**\r\n     * @notice Sets minimum pool balance\r\n     * @param newMinimum New minimum balance\r\n     */\r\n    function setMinimumPoolBalance(uint256 newMinimum) external;\r\n\r\n    /**\r\n     * @notice Emergency withdrawal of funds\r\n     * @param amount Amount to withdraw\r\n     */\r\n    function emergencyWithdraw(uint256 amount) external;\r\n\r\n    /**\r\n     * @notice Pauses the contract\r\n     */\r\n    function pause() external;\r\n\r\n    /**\r\n     * @notice Unpauses the contract\r\n     */\r\n    function unpause() external;\r\n}"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"contracts": {
+			"contracts/interfaces/IVerixGasPool.sol": {
+				"IVerixGasPool": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "admin",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "EmergencyWithdraw",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "tierLevel",
+									"type": "uint256"
+								}
+							],
+							"name": "GasCovered",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newMinimum",
+									"type": "uint256"
+								}
+							],
+							"name": "MinimumBalanceUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "PoolReplenished",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "tierId",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "minTokens",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "coveragePercent",
+									"type": "uint256"
+								}
+							],
+							"name": "TierConfigUpdated",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newTier",
+									"type": "uint256"
+								}
+							],
+							"name": "TierUpdated",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "gasAmount",
+									"type": "uint256"
+								}
+							],
+							"name": "coverGasFee",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "emergencyWithdraw",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "getPoolStatus",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "current",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "minimum",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "totalUsers",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tierId",
+									"type": "uint256"
+								}
+							],
+							"name": "getTier",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "minTokens",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "coveragePercent",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "maxDailyGas",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct IVerixGasPool.Tier",
+									"name": "",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								}
+							],
+							"name": "getUserGasUsage",
+							"outputs": [
+								{
+									"components": [
+										{
+											"internalType": "uint256",
+											"name": "dailyUsed",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "lastResetTime",
+											"type": "uint256"
+										},
+										{
+											"internalType": "uint256",
+											"name": "totalLifetimeUsed",
+											"type": "uint256"
+										}
+									],
+									"internalType": "struct IVerixGasPool.UserGasUsage",
+									"name": "",
+									"type": "tuple"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								}
+							],
+							"name": "getUserTierInfo",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "tier",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "coveragePercent",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "maxDaily",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "usedToday",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "pause",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "replenishPool",
+							"outputs": [],
+							"stateMutability": "payable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "newMinimum",
+									"type": "uint256"
+								}
+							],
+							"name": "setMinimumPoolBalance",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "unpause",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tierId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "minTokens",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "coveragePercent",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "maxDailyGas",
+									"type": "uint256"
+								}
+							],
+							"name": "updateTier",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "user",
+									"type": "address"
+								}
+							],
+							"name": "updateUserTier",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"coverGasFee(address,uint256)": {
+								"params": {
+									"gasAmount": "Amount of gas to cover",
+									"user": "Address of the user"
+								},
+								"returns": {
+									"_0": "Amount of gas covered"
+								}
+							},
+							"emergencyWithdraw(uint256)": {
+								"params": {
+									"amount": "Amount to withdraw"
+								}
+							},
+							"getPoolStatus()": {
+								"returns": {
+									"current": "Current pool balance",
+									"minimum": "Minimum required balance",
+									"totalUsers": "Total number of users with tiers"
+								}
+							},
+							"getTier(uint256)": {
+								"params": {
+									"tierId": "Tier identifier"
+								},
+								"returns": {
+									"_0": "Tier configuration"
+								}
+							},
+							"getUserGasUsage(address)": {
+								"params": {
+									"user": "Address to check"
+								},
+								"returns": {
+									"_0": "UserGasUsage structure"
+								}
+							},
+							"getUserTierInfo(address)": {
+								"params": {
+									"user": "Address to check"
+								},
+								"returns": {
+									"coveragePercent": "Current coverage percentage",
+									"maxDaily": "Maximum daily gas limit",
+									"tier": "Current tier level",
+									"usedToday": "Gas used today"
+								}
+							},
+							"setMinimumPoolBalance(uint256)": {
+								"params": {
+									"newMinimum": "New minimum balance"
+								}
+							},
+							"updateTier(uint256,uint256,uint256,uint256)": {
+								"params": {
+									"coveragePercent": "Coverage percentage in basis points",
+									"maxDailyGas": "Maximum daily gas coverage",
+									"minTokens": "Minimum tokens required",
+									"tierId": "Tier identifier"
+								}
+							},
+							"updateUserTier(address)": {
+								"params": {
+									"user": "Address of the user"
+								}
+							}
+						},
+						"title": "IVerixGasPool",
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"coverGasFee(address,uint256)": "1715a582",
+							"emergencyWithdraw(uint256)": "5312ea8e",
+							"getPoolStatus()": "7f79496c",
+							"getTier(uint256)": "4f062c5a",
+							"getUserGasUsage(address)": "59ff6fb2",
+							"getUserTierInfo(address)": "d02829e2",
+							"pause()": "8456cb59",
+							"replenishPool()": "baf256a8",
+							"setMinimumPoolBalance(uint256)": "b539cd8f",
+							"unpause()": "3f4ba83a",
+							"updateTier(uint256,uint256,uint256,uint256)": "aef8356c",
+							"updateUserTier(address)": "335d7b3c"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"EmergencyWithdraw\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tierLevel\",\"type\":\"uint256\"}],\"name\":\"GasCovered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newMinimum\",\"type\":\"uint256\"}],\"name\":\"MinimumBalanceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"PoolReplenished\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tierId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minTokens\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"coveragePercent\",\"type\":\"uint256\"}],\"name\":\"TierConfigUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newTier\",\"type\":\"uint256\"}],\"name\":\"TierUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"gasAmount\",\"type\":\"uint256\"}],\"name\":\"coverGasFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"emergencyWithdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolStatus\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"current\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minimum\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalUsers\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tierId\",\"type\":\"uint256\"}],\"name\":\"getTier\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"minTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"coveragePercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxDailyGas\",\"type\":\"uint256\"}],\"internalType\":\"struct IVerixGasPool.Tier\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getUserGasUsage\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"dailyUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastResetTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalLifetimeUsed\",\"type\":\"uint256\"}],\"internalType\":\"struct IVerixGasPool.UserGasUsage\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getUserTierInfo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tier\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"coveragePercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxDaily\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"usedToday\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"replenishPool\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newMinimum\",\"type\":\"uint256\"}],\"name\":\"setMinimumPoolBalance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tierId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"coveragePercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxDailyGas\",\"type\":\"uint256\"}],\"name\":\"updateTier\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"updateUserTier\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"coverGasFee(address,uint256)\":{\"params\":{\"gasAmount\":\"Amount of gas to cover\",\"user\":\"Address of the user\"},\"returns\":{\"_0\":\"Amount of gas covered\"}},\"emergencyWithdraw(uint256)\":{\"params\":{\"amount\":\"Amount to withdraw\"}},\"getPoolStatus()\":{\"returns\":{\"current\":\"Current pool balance\",\"minimum\":\"Minimum required balance\",\"totalUsers\":\"Total number of users with tiers\"}},\"getTier(uint256)\":{\"params\":{\"tierId\":\"Tier identifier\"},\"returns\":{\"_0\":\"Tier configuration\"}},\"getUserGasUsage(address)\":{\"params\":{\"user\":\"Address to check\"},\"returns\":{\"_0\":\"UserGasUsage structure\"}},\"getUserTierInfo(address)\":{\"params\":{\"user\":\"Address to check\"},\"returns\":{\"coveragePercent\":\"Current coverage percentage\",\"maxDaily\":\"Maximum daily gas limit\",\"tier\":\"Current tier level\",\"usedToday\":\"Gas used today\"}},\"setMinimumPoolBalance(uint256)\":{\"params\":{\"newMinimum\":\"New minimum balance\"}},\"updateTier(uint256,uint256,uint256,uint256)\":{\"params\":{\"coveragePercent\":\"Coverage percentage in basis points\",\"maxDailyGas\":\"Maximum daily gas coverage\",\"minTokens\":\"Minimum tokens required\",\"tierId\":\"Tier identifier\"}},\"updateUserTier(address)\":{\"params\":{\"user\":\"Address of the user\"}}},\"title\":\"IVerixGasPool\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"coverGasFee(address,uint256)\":{\"notice\":\"Covers gas fees for eligible users\"},\"emergencyWithdraw(uint256)\":{\"notice\":\"Emergency withdrawal of funds\"},\"getPoolStatus()\":{\"notice\":\"Gets pool status information\"},\"getTier(uint256)\":{\"notice\":\"Gets tier configuration\"},\"getUserGasUsage(address)\":{\"notice\":\"Gets user's gas usage information\"},\"getUserTierInfo(address)\":{\"notice\":\"Gets user's current tier information\"},\"pause()\":{\"notice\":\"Pauses the contract\"},\"replenishPool()\":{\"notice\":\"Replenishes the gas pool\"},\"setMinimumPoolBalance(uint256)\":{\"notice\":\"Sets minimum pool balance\"},\"unpause()\":{\"notice\":\"Unpauses the contract\"},\"updateTier(uint256,uint256,uint256,uint256)\":{\"notice\":\"Updates tier configuration\"},\"updateUserTier(address)\":{\"notice\":\"Updates user's tier based on their token balance\"}},\"notice\":\"Interface for the gas pool contract that manages gas fee coverage\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IVerixGasPool.sol\":\"IVerixGasPool\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/interfaces/IVerixGasPool.sol\":{\"keccak256\":\"0x802c97cb6c9be5f2e52299bda09fb21db511ec105632651e6d91e56613c4afb9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://281dd47c3f49b3ef1e376fb2ccbac6064ddb72bc681c0ac2e0ea9d4ca6b383e3\",\"dweb:/ipfs/QmPJ1Tcwq1ZABufZxXG2PJE3sBSKSG1GghQtJBXxTkKfxw\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"coverGasFee(address,uint256)": {
+								"notice": "Covers gas fees for eligible users"
+							},
+							"emergencyWithdraw(uint256)": {
+								"notice": "Emergency withdrawal of funds"
+							},
+							"getPoolStatus()": {
+								"notice": "Gets pool status information"
+							},
+							"getTier(uint256)": {
+								"notice": "Gets tier configuration"
+							},
+							"getUserGasUsage(address)": {
+								"notice": "Gets user's gas usage information"
+							},
+							"getUserTierInfo(address)": {
+								"notice": "Gets user's current tier information"
+							},
+							"pause()": {
+								"notice": "Pauses the contract"
+							},
+							"replenishPool()": {
+								"notice": "Replenishes the gas pool"
+							},
+							"setMinimumPoolBalance(uint256)": {
+								"notice": "Sets minimum pool balance"
+							},
+							"unpause()": {
+								"notice": "Unpauses the contract"
+							},
+							"updateTier(uint256,uint256,uint256,uint256)": {
+								"notice": "Updates tier configuration"
+							},
+							"updateUserTier(address)": {
+								"notice": "Updates user's tier based on their token balance"
+							}
+						},
+						"notice": "Interface for the gas pool contract that manages gas fee coverage",
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"contracts/interfaces/IVerixGasPool.sol": {
+				"ast": {
+					"absolutePath": "contracts/interfaces/IVerixGasPool.sol",
+					"exportedSymbols": {
+						"IVerixGasPool": [
+							149
+						]
+					},
+					"id": 150,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".19"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "33:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IVerixGasPool",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"documentation": {
+								"id": 2,
+								"nodeType": "StructuredDocumentation",
+								"src": "61:111:0",
+								"text": " @title IVerixGasPool\n @notice Interface for the gas pool contract that manages gas fee coverage"
+							},
+							"fullyImplemented": false,
+							"id": 149,
+							"linearizedBaseContracts": [
+								149
+							],
+							"name": "IVerixGasPool",
+							"nameLocation": "184:13:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"canonicalName": "IVerixGasPool.Tier",
+									"documentation": {
+										"id": 3,
+										"nodeType": "StructuredDocumentation",
+										"src": "205:61:0",
+										"text": " @dev Struct to define tier configuration"
+									},
+									"id": 10,
+									"members": [
+										{
+											"constant": false,
+											"id": 5,
+											"mutability": "mutable",
+											"name": "minTokens",
+											"nameLocation": "303:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 10,
+											"src": "295:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 4,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "295:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 7,
+											"mutability": "mutable",
+											"name": "coveragePercent",
+											"nameLocation": "372:15:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 10,
+											"src": "364:23:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 6,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "364:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 9,
+											"mutability": "mutable",
+											"name": "maxDailyGas",
+											"nameLocation": "460:11:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 10,
+											"src": "452:19:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 8,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "452:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "Tier",
+									"nameLocation": "279:4:0",
+									"nodeType": "StructDefinition",
+									"scope": 149,
+									"src": "272:240:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IVerixGasPool.UserGasUsage",
+									"documentation": {
+										"id": 11,
+										"nodeType": "StructuredDocumentation",
+										"src": "520:56:0",
+										"text": " @dev Struct to track user gas usage"
+									},
+									"id": 18,
+									"members": [
+										{
+											"constant": false,
+											"id": 13,
+											"mutability": "mutable",
+											"name": "dailyUsed",
+											"nameLocation": "621:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 18,
+											"src": "613:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 12,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "613:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 15,
+											"mutability": "mutable",
+											"name": "lastResetTime",
+											"nameLocation": "674:13:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 18,
+											"src": "666:21:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 14,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "666:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 17,
+											"mutability": "mutable",
+											"name": "totalLifetimeUsed",
+											"nameLocation": "739:17:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 18,
+											"src": "731:25:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 16,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "731:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "UserGasUsage",
+									"nameLocation": "589:12:0",
+									"nodeType": "StructDefinition",
+									"scope": 149,
+									"src": "582:209:0",
+									"visibility": "public"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "ef6f43d4bd83aa0d2d188adcc43de14e1d6bd17dfac59d3685eb5735dd2efe18",
+									"id": 26,
+									"name": "GasCovered",
+									"nameLocation": "820:10:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 25,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 20,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "847:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 26,
+												"src": "831:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 19,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "831:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 22,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "861:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 26,
+												"src": "853:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 21,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "853:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 24,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "tierLevel",
+												"nameLocation": "877:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 26,
+												"src": "869:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 23,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "869:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "830:57:0"
+									},
+									"src": "814:74:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "46346e18059a3eb3183c964bb447e4b1b12249aef71bccbddb4c78b47fd13638",
+									"id": 32,
+									"name": "TierUpdated",
+									"nameLocation": "900:11:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 31,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 28,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "928:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "912:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 27,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "912:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 30,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newTier",
+												"nameLocation": "942:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "934:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 29,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "934:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "911:39:0"
+									},
+									"src": "894:57:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "ed75cd44c6895cb1c6ca1e0e6c7cdbad566f26831cbde55fc36e622a83467d1c",
+									"id": 36,
+									"name": "PoolReplenished",
+									"nameLocation": "963:15:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 35,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 34,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "987:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 36,
+												"src": "979:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 33,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "979:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "978:16:0"
+									},
+									"src": "957:38:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "80cd897cbf960fc0db413e3094a3b66a7536e783b3e0b2560193f2fdf91275c2",
+									"id": 44,
+									"name": "TierConfigUpdated",
+									"nameLocation": "1007:17:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 43,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 38,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "tierId",
+												"nameLocation": "1033:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 44,
+												"src": "1025:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 37,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1025:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 40,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "minTokens",
+												"nameLocation": "1049:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 44,
+												"src": "1041:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 39,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1041:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 42,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "coveragePercent",
+												"nameLocation": "1068:15:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 44,
+												"src": "1060:23:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 41,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1060:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1024:60:0"
+									},
+									"src": "1001:84:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "5fafa99d0643513820be26656b45130b01e1c03062e1266bf36f88cbd3bd9695",
+									"id": 50,
+									"name": "EmergencyWithdraw",
+									"nameLocation": "1097:17:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 49,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 46,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "admin",
+												"nameLocation": "1131:5:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 50,
+												"src": "1115:21:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 45,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1115:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 48,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "1146:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 50,
+												"src": "1138:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 47,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1138:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1114:39:0"
+									},
+									"src": "1091:63:0"
+								},
+								{
+									"anonymous": false,
+									"eventSelector": "4de6d6194ab654009cd34ba95a217ef6c812e4587917905252160d43d5e82fb2",
+									"id": 54,
+									"name": "MinimumBalanceUpdated",
+									"nameLocation": "1166:21:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 53,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 52,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newMinimum",
+												"nameLocation": "1196:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 54,
+												"src": "1188:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 51,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1188:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1187:20:0"
+									},
+									"src": "1160:48:0"
+								},
+								{
+									"documentation": {
+										"id": 55,
+										"nodeType": "StructuredDocumentation",
+										"src": "1216:117:0",
+										"text": " @notice Updates user's tier based on their token balance\n @param user Address of the user"
+									},
+									"functionSelector": "335d7b3c",
+									"id": 60,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updateUserTier",
+									"nameLocation": "1348:14:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 58,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 57,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "1371:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 60,
+												"src": "1363:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 56,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1363:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1362:14:0"
+									},
+									"returnParameters": {
+										"id": 59,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1385:0:0"
+									},
+									"scope": 149,
+									"src": "1339:47:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 61,
+										"nodeType": "StructuredDocumentation",
+										"src": "1394:189:0",
+										"text": " @notice Covers gas fees for eligible users\n @param user Address of the user\n @param gasAmount Amount of gas to cover\n @return Amount of gas covered"
+									},
+									"functionSelector": "1715a582",
+									"id": 70,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "coverGasFee",
+									"nameLocation": "1598:11:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 66,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 63,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "1618:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 70,
+												"src": "1610:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 62,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1610:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 65,
+												"mutability": "mutable",
+												"name": "gasAmount",
+												"nameLocation": "1632:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 70,
+												"src": "1624:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 64,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1624:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1609:33:0"
+									},
+									"returnParameters": {
+										"id": 69,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 68,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 70,
+												"src": "1661:7:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 67,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1661:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1660:9:0"
+									},
+									"scope": 149,
+									"src": "1589:81:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 71,
+										"nodeType": "StructuredDocumentation",
+										"src": "1678:53:0",
+										"text": " @notice Replenishes the gas pool"
+									},
+									"functionSelector": "baf256a8",
+									"id": 74,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "replenishPool",
+									"nameLocation": "1746:13:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 72,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1759:2:0"
+									},
+									"returnParameters": {
+										"id": 73,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1778:0:0"
+									},
+									"scope": 149,
+									"src": "1737:42:0",
+									"stateMutability": "payable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 75,
+										"nodeType": "StructuredDocumentation",
+										"src": "1787:263:0",
+										"text": " @notice Updates tier configuration\n @param tierId Tier identifier\n @param minTokens Minimum tokens required\n @param coveragePercent Coverage percentage in basis points\n @param maxDailyGas Maximum daily gas coverage"
+									},
+									"functionSelector": "aef8356c",
+									"id": 86,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "updateTier",
+									"nameLocation": "2065:10:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 84,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 77,
+												"mutability": "mutable",
+												"name": "tierId",
+												"nameLocation": "2094:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 86,
+												"src": "2086:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 76,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2086:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 79,
+												"mutability": "mutable",
+												"name": "minTokens",
+												"nameLocation": "2119:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 86,
+												"src": "2111:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 78,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2111:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 81,
+												"mutability": "mutable",
+												"name": "coveragePercent",
+												"nameLocation": "2147:15:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 86,
+												"src": "2139:23:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 80,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2139:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 83,
+												"mutability": "mutable",
+												"name": "maxDailyGas",
+												"nameLocation": "2181:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 86,
+												"src": "2173:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 82,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2173:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2075:124:0"
+									},
+									"returnParameters": {
+										"id": 85,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2208:0:0"
+									},
+									"scope": 149,
+									"src": "2056:153:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 87,
+										"nodeType": "StructuredDocumentation",
+										"src": "2217:292:0",
+										"text": " @notice Gets user's current tier information\n @param user Address to check\n @return tier Current tier level\n @return coveragePercent Current coverage percentage\n @return maxDaily Maximum daily gas limit\n @return usedToday Gas used today"
+									},
+									"functionSelector": "d02829e2",
+									"id": 100,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getUserTierInfo",
+									"nameLocation": "2524:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 90,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 89,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "2548:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 100,
+												"src": "2540:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 88,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "2540:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2539:14:0"
+									},
+									"returnParameters": {
+										"id": 99,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 92,
+												"mutability": "mutable",
+												"name": "tier",
+												"nameLocation": "2595:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 100,
+												"src": "2587:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 91,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2587:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 94,
+												"mutability": "mutable",
+												"name": "coveragePercent",
+												"nameLocation": "2618:15:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 100,
+												"src": "2610:23:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 93,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2610:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 96,
+												"mutability": "mutable",
+												"name": "maxDaily",
+												"nameLocation": "2652:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 100,
+												"src": "2644:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 95,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2644:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 98,
+												"mutability": "mutable",
+												"name": "usedToday",
+												"nameLocation": "2679:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 100,
+												"src": "2671:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 97,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2671:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2576:119:0"
+									},
+									"scope": 149,
+									"src": "2515:181:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 101,
+										"nodeType": "StructuredDocumentation",
+										"src": "2704:125:0",
+										"text": " @notice Gets tier configuration\n @param tierId Tier identifier\n @return Tier configuration"
+									},
+									"functionSelector": "4f062c5a",
+									"id": 109,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getTier",
+									"nameLocation": "2844:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 104,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 103,
+												"mutability": "mutable",
+												"name": "tierId",
+												"nameLocation": "2860:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 109,
+												"src": "2852:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 102,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "2852:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2851:16:0"
+									},
+									"returnParameters": {
+										"id": 108,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 107,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 109,
+												"src": "2891:11:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_Tier_$10_memory_ptr",
+													"typeString": "struct IVerixGasPool.Tier"
+												},
+												"typeName": {
+													"id": 106,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 105,
+														"name": "Tier",
+														"nameLocations": [
+															"2891:4:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 10,
+														"src": "2891:4:0"
+													},
+													"referencedDeclaration": 10,
+													"src": "2891:4:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_Tier_$10_storage_ptr",
+														"typeString": "struct IVerixGasPool.Tier"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "2890:13:0"
+									},
+									"scope": 149,
+									"src": "2835:69:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 110,
+										"nodeType": "StructuredDocumentation",
+										"src": "2912:138:0",
+										"text": " @notice Gets user's gas usage information\n @param user Address to check\n @return UserGasUsage structure"
+									},
+									"functionSelector": "59ff6fb2",
+									"id": 118,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getUserGasUsage",
+									"nameLocation": "3065:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 113,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 112,
+												"mutability": "mutable",
+												"name": "user",
+												"nameLocation": "3089:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 118,
+												"src": "3081:12:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 111,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "3081:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3080:14:0"
+									},
+									"returnParameters": {
+										"id": 117,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 116,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 118,
+												"src": "3118:19:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_UserGasUsage_$18_memory_ptr",
+													"typeString": "struct IVerixGasPool.UserGasUsage"
+												},
+												"typeName": {
+													"id": 115,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 114,
+														"name": "UserGasUsage",
+														"nameLocations": [
+															"3118:12:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 18,
+														"src": "3118:12:0"
+													},
+													"referencedDeclaration": 18,
+													"src": "3118:12:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_UserGasUsage_$18_storage_ptr",
+														"typeString": "struct IVerixGasPool.UserGasUsage"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3117:21:0"
+									},
+									"scope": 149,
+									"src": "3056:83:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 119,
+										"nodeType": "StructuredDocumentation",
+										"src": "3147:211:0",
+										"text": " @notice Gets pool status information\n @return current Current pool balance\n @return minimum Minimum required balance\n @return totalUsers Total number of users with tiers"
+									},
+									"functionSelector": "7f79496c",
+									"id": 128,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getPoolStatus",
+									"nameLocation": "3373:13:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 120,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3386:2:0"
+									},
+									"returnParameters": {
+										"id": 127,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 122,
+												"mutability": "mutable",
+												"name": "current",
+												"nameLocation": "3430:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 128,
+												"src": "3422:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 121,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3422:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 124,
+												"mutability": "mutable",
+												"name": "minimum",
+												"nameLocation": "3456:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 128,
+												"src": "3448:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 123,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3448:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 126,
+												"mutability": "mutable",
+												"name": "totalUsers",
+												"nameLocation": "3482:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 128,
+												"src": "3474:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 125,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3474:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3411:88:0"
+									},
+									"scope": 149,
+									"src": "3364:136:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 129,
+										"nodeType": "StructuredDocumentation",
+										"src": "3508:100:0",
+										"text": " @notice Sets minimum pool balance\n @param newMinimum New minimum balance"
+									},
+									"functionSelector": "b539cd8f",
+									"id": 134,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "setMinimumPoolBalance",
+									"nameLocation": "3623:21:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 132,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 131,
+												"mutability": "mutable",
+												"name": "newMinimum",
+												"nameLocation": "3653:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 134,
+												"src": "3645:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 130,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3645:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3644:20:0"
+									},
+									"returnParameters": {
+										"id": 133,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3673:0:0"
+									},
+									"scope": 149,
+									"src": "3614:60:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 135,
+										"nodeType": "StructuredDocumentation",
+										"src": "3682:99:0",
+										"text": " @notice Emergency withdrawal of funds\n @param amount Amount to withdraw"
+									},
+									"functionSelector": "5312ea8e",
+									"id": 140,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "emergencyWithdraw",
+									"nameLocation": "3796:17:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 138,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 137,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "3822:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 140,
+												"src": "3814:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 136,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3814:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3813:16:0"
+									},
+									"returnParameters": {
+										"id": 139,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3838:0:0"
+									},
+									"scope": 149,
+									"src": "3787:52:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 141,
+										"nodeType": "StructuredDocumentation",
+										"src": "3847:48:0",
+										"text": " @notice Pauses the contract"
+									},
+									"functionSelector": "8456cb59",
+									"id": 144,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "pause",
+									"nameLocation": "3910:5:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 142,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3915:2:0"
+									},
+									"returnParameters": {
+										"id": 143,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3926:0:0"
+									},
+									"scope": 149,
+									"src": "3901:26:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 145,
+										"nodeType": "StructuredDocumentation",
+										"src": "3935:50:0",
+										"text": " @notice Unpauses the contract"
+									},
+									"functionSelector": "3f4ba83a",
+									"id": 148,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "unpause",
+									"nameLocation": "4000:7:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 146,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "4007:2:0"
+									},
+									"returnParameters": {
+										"id": 147,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "4018:0:0"
+									},
+									"scope": 149,
+									"src": "3991:28:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 150,
+							"src": "174:3848:0",
+							"usedErrors": [],
+							"usedEvents": [
+								26,
+								32,
+								36,
+								44,
+								50,
+								54
+							]
+						}
+					],
+					"src": "33:3989:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}
